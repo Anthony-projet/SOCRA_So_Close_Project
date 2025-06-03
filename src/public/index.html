@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>So-Close - Future of Urban Gardening</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --green-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-gradient: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0f172a 100%);
+            --accent-green: #00ff88;
+            --accent-blue: #0099ff;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--dark-gradient);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.6;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: float-orb 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.4) 0%, transparent 70%);
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, transparent 70%);
+            top: 60%;
+            right: -150px;
+            animation-delay: 7s;
+        }
+
+        .orb-3 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 153, 255, 0.2) 0%, transparent 70%);
+            bottom: -250px;
+            left: 30%;
+            animation-delay: 14s;
+        }
+
+        @keyframes float-orb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Grid Pattern Overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: grid-move 20s linear infinite;
+        }
+
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-green), var(--accent-blue));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-status {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50px;
+            color: var(--accent-green);
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1200px;
+            padding: 0 2rem;
+            z-index: 10;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            animation: fade-in-up 1s ease 0.2s both;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fade-in-up 1s ease 0.4s both;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-accent {
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fade-in-up 1s ease 0.6s both;
+            line-height: 1.4;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fade-in-up 1s ease 0.8s both;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            backdrop-filter: blur(20px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Logo Section */
+        .logo-showcase {
+            position: relative;
+            margin: 4rem 0;
+            animation: fade-in-up 1s ease 1s both;
+        }
+
+        .logo-3d {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            perspective: 1000px;
+            animation: logo-rotate 10s linear infinite;
+        }
+
+        .logo-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes logo-rotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* Content Sections */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: card-reveal 0.8s ease forwards;
+        }
+
+        .glass-card:nth-child(1) { animation-delay: 0.1s; }
+        .glass-card:nth-child(2) { animation-delay: 0.3s; }
+        .glass-card:nth-child(3) { animation-delay: 0.5s; }
+
+        @keyframes card-reveal {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            border-radius: 24px 24px 0 0;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            color: var(--accent-green);
+            transform: translateX(10px);
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        /* Team Section */
+        .team-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 4rem;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            border-radius: 32px 32px 0 0;
+        }
+
+        .team-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .team-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .team-member {
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.2), rgba(245, 87, 108, 0.2));
+            border: 1px solid rgba(240, 147, 251, 0.3);
+            padding: 1.5rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(240, 147, 251, 0.3);
+        }
+
+        .team-quote {
+            font-size: 1.3rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+
+        .footer-quote {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .footer-author {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .footer-info {
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Advanced Logo SVG */
+        .advanced-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.5));
+            animation: logo-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logo-pulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.5)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 50px rgba(0, 255, 136, 0.8)); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .hero-title {
+                font-size: clamp(2.5rem, 6vw, 5rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+            }
+
+            .team-section {
+                padding: 2rem 1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .section {
+                padding: 4rem 1rem;
+            }
+
+            .footer {
+                padding: 3rem 1rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+                padding: 0 1rem;
+            }
+            
+            .advanced-logo {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+                line-height: 1.1;
+            }
+            
+            .hero-badge {
+                font-size: 0.8rem;
+                padding: 0.4rem 1rem;
+            }
+            
+            .glass-card {
+                padding: 1rem;
+            }
+            
+            .team-member {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Scroll animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+        <div class="bg-orb orb-3"></div>
+    </div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-logo">So-Close</div>
+            <div class="nav-status">● LIVE • Paris 2035</div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🌱 Projet EPITA SIGL • Application Civique</div>
+            
+            <svg class="advanced-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="plantGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00ff88;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#0099ff;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="potGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#A0522D;stop-opacity:1" />
+                    </linearGradient>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge> 
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                
+                <!-- Modern Pot -->
+                <rect x="30" y="70" width="60" height="40" rx="8" fill="url(#potGradient)" stroke="#654321" stroke-width="2"/>
+                <rect x="32" y="72" width="56" height="25" rx="4" fill="#2D2D2D"/>
+                
+                <!-- Central Plant -->
+                <rect x="58" y="50" width="4" height="25" fill="url(#plantGradient)" filter="url(#glow)"/>
+                
+                <!-- Advanced Leaves with gradient -->
+                <ellipse cx="60" cy="45" rx="12" ry="18" fill="url(#plantGradient)" filter="url(#glow)" opacity="0.9"/>
+                <ellipse cx="45" cy="55" rx="8" ry="12" fill="url(#plantGradient)" filter="url(#glow)" opacity="0.8" transform="rotate(-30 45 55)"/>
+                <ellipse cx="75" cy="55" rx="8" ry="12" fill="url(#plantGradient)" filter="url(#glow)" opacity="0.8" transform="rotate(30 75 55)"/>
+                
+                <!-- Network connections (So-Close concept) -->
+                <circle cx="30" cy="30" r="8" fill="none" stroke="#00ff88" stroke-width="2" opacity="0.6"/>
+                <circle cx="90" cy="30" r="8" fill="none" stroke="#0099ff" stroke-width="2" opacity="0.6"/>
+                <circle cx="60" cy="20" r="8" fill="none" stroke="#00ff88" stroke-width="2" opacity="0.6"/>
+                
+                <path d="M30 30 Q60 10 90 30" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.7" stroke-dasharray="5,3"/>
+                <path d="M30 30 Q45 25 60 20" stroke="#0099ff" stroke-width="2" fill="none" opacity="0.7" stroke-dasharray="5,3"/>
+                <path d="M60 20 Q75 25 90 30" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.7" stroke-dasharray="5,3"/>
+                
+                <!-- Connection nodes -->
+                <circle cx="30" cy="30" r="3" fill="#00ff88" filter="url(#glow)"/>
+                <circle cx="90" cy="30" r="3" fill="#0099ff" filter="url(#glow)"/>
+                <circle cx="60" cy="20" r="3" fill="#00ff88" filter="url(#glow)"/>
+                
+                <!-- Urban elements -->
+                <rect x="10" y="15" width="12" height="30" fill="#64748b" opacity="0.4" rx="2"/>
+                <rect x="98" y="10" width="12" height="35" fill="#64748b" opacity="0.4" rx="2"/>
+                <rect x="5" y="20" width="8" height="25" fill="#64748b" opacity="0.3" rx="1"/>
+            </svg>
+            
+            <h1 class="hero-title">
+                <span class="hero-accent">So-Close</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                L'avenir se cultive ensemble
+            </p>
+            
+            <div class="hero-cta">
+                <div class="year-badge">Paris 2035 • Application Civique</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section id="mission" class="section scroll-reveal">
+        <div class="cards-grid">
+            <div class="glass-card">
+                <span class="card-icon">🌿</span>
+                <h3 class="card-title">Notre Mission</h3>
+                <p class="card-description">
+                    So-Close accompagne les collectifs citoyens parisiens dans la création et 
+                    la gestion de jardins potagers et de micro-forêts nourricières urbaines.
+                </p>
+                <p class="card-description">
+                    Inspirée des techniques ancestrales des jardins maraîchers parisiens et 
+                    des fameux "murs à pêches" de Montreuil, notre plateforme numérique 
+                    révolutionne la "Ville comestible".
+                </p>
+            </div>
+            
+            <div class="glass-card">
+                <span class="card-icon">🚀</span>
+                <h3 class="card-title">Fonctionnalités</h3>
+                <p class="card-description">Une plateforme complète pour gérer votre jardin urbain collaboratif :</p>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        Créer ou rejoindre un jardin collectif
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        Planifier selon climat et biodiversité locale
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        Gérer collectivement tâches et ressources
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        Partager conseils et retours d'expérience
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        Suivre récoltes et santé du jardin
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section scroll-reveal">
+        <h2 class="team-title">🌱 Architectes du Futur Vert</h2>
+        <div class="team-grid">
+            <div class="team-member">Prénom Nom 1</div>
+            <div class="team-member">Prénom Nom 2</div>
+        </div>
+        <p class="team-quote">
+            "Tout le monde ne devient pas maraîcher du jour au lendemain... 
+            Mais ensemble, nous cultivons l'avenir numérique des jardins urbains et semons 
+            les graines d'une révolution verte collaborative."
+        </p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-quote">
+            🌍 "L'avenir se cultive ensemble, et il commence par quelques lignes de code bien plantées."
+        </div>
+        <div class="footer-author">
+            — ChatGPT (GPT-4-turbo, mai 2025)
+        </div>
+        <div class="footer-info">
+            EPITA SIGL 2026 - Cours SOCRA<br>
+            Application web civique et collaborative • Développé avec passion pour un avenir durable
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+
+        // Wait for DOM to be loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Observe all scroll reveal elements
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+                const navbar = document.querySelector('.navbar');
+                if (navbar) {
+                    if (window.scrollY > 100) {
+                        navbar.style.background = 'rgba(0, 0, 0, 0.95)';
+                        navbar.style.borderBottom = '1px solid rgba(0, 255, 136, 0.2)';
+                    } else {
+                        navbar.style.background = 'rgba(0, 0, 0, 0.8)';
+                        navbar.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+                    }
+                }
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Advanced cursor effect (only on desktop)
+            if (window.innerWidth > 768) {
+                let cursor = document.createElement('div');
+                cursor.className = 'cursor';
+                cursor.style.cssText = `
+                    position: fixed;
+                    width: 20px;
+                    height: 20px;
+                    background: radial-gradient(circle, rgba(0, 255, 136, 0.8) 0%, transparent 70%);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 9999;
+                    transition: transform 0.1s ease;
+                    display: none;
+                `;
+                document.body.appendChild(cursor);
+
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.display = 'block';
+                    cursor.style.left = e.clientX - 10 + 'px';
+                    cursor.style.top = e.clientY - 10 + 'px';
+                });
+
+                // Hover effects for interactive elements
+                document.querySelectorAll('.btn, .glass-card, .team-member').forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        cursor.style.transform = 'scale(2)';
+                        cursor.style.background = 'radial-gradient(circle, rgba(0, 153, 255, 0.6) 0%, transparent 70%)';
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        cursor.style.transform = 'scale(1)';
+                        cursor.style.background = 'radial-gradient(circle, rgba(0, 255, 136, 0.8) 0%, transparent 70%)';
+                    });
+                });
+            }
+
+            // Parallax effect for hero section (reduced for mobile)
+            window.addEventListener('scroll', () => {
+                const parallax = document.querySelector('.hero-content');
+                if (parallax && window.innerWidth > 768) {
+                    const scrolled = window.pageYOffset;
+                    const speed = scrolled * 0.3; // Reduced speed
+                    parallax.style.transform = `translateY(${speed}px)`;
+                }
+            });
+        });
+
+        // Dynamic text animation (simplified)
+        function createTextAnimation() {
+            const title = document.querySelector('.hero-title');
+            if (!title) return;
+            
+            // Simple fade-in instead of complex character animation
+            title.style.opacity = '0';
+            title.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                title.style.transition = 'all 1s ease';
+                title.style.opacity = '1';
+                title.style.transform = 'translateY(0)';
+            }, 500);
+        }
+
+        // Initialize animations when page loads
+        window.addEventListener('load', () => {
+            createTextAnimation();
+            
+            // Add loading complete class for final animations
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 1000);
+        });
+
+        // Performance optimization: Disable heavy animations on mobile
+        if (window.innerWidth <= 768) {
+            const style = document.createElement('style');
+            style.textContent = `
+                .bg-orb { display: none; }
+                .grid-overlay { opacity: 0.5; }
+                .logo-pulse { animation: none; }
+                .float-orb { animation: none; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Easter egg: Konami code for special effect
+        let konamiCode = [];
+        const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // Up Up Down Down Left Right Left Right B A
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.keyCode);
+            if (konamiCode.length > konami.length) {
+                konamiCode.shift();
+            }
+            
+            if (konamiCode.join(',') === konami.join(',')) {
+                // Special animation
+                document.body.style.animation = 'rainbow-bg 2s ease-in-out';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 2000);
+            }
+        });
+
+        // Add rainbow background animation
+        const rainbowStyle = document.createElement('style');
+        rainbowStyle.textContent = `
+            @keyframes rainbow-bg {
+                0% { filter: hue-rotate(0deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(rainbowStyle);
+    </script>
+</body>
+</html>
