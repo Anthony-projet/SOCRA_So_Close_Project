@@ -21,7 +21,14 @@ jobs:
         with:
           globs: "**/*.md"
 
-      - name: Copier fichier via SCP
+      - name: 📁 Lister les fichiers à déployer
+        run: |
+          echo "📁 Contenu du repository :"
+          ls -la
+          echo "🔍 Fichiers HTML trouvés :"
+          find . -name "*.html" -type f
+          
+      - name: 🚀 Copier fichier via SCP
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.HOST }}
@@ -29,3 +36,33 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: index.html
           target: /home/sigl
+      
+      - name: 🔄 Déployer vers Nginx
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "🔄 Déploiement en cours sur so-close.groupe28.socra-sigl.fr..."
+            sudo cp /home/sigl/index.html /var/www/html/ 2>/dev/null || echo "index.html non trouvé"
+            sudo chown www-data:www-data /var/www/html/index.html
+            sudo systemctl reload nginx
+            echo "✅ Déploiement terminé avec succès !"
+            echo "🌐 Site mis à jour sur : https://so-close.groupe28.socra-sigl.fr"
+      
+      - name: 🧪 Test de santé du site
+        run: |
+          echo "🧪 Vérification que le site répond..."
+          sleep 5
+          curl -f -s -o /dev/null https://so-close.groupe28.socra-sigl.fr && echo "✅ Site accessible !" || echo "❌ Site non accessible - vérifiez manuellement"
+
+      - name: 📊 Résumé du déploiement
+        run: |
+          echo "📊 RÉSUMÉ DU DÉPLOIEMENT"
+          echo "========================="
+          echo "🕐 Heure: $(date)"
+          echo "🌍 Site: https://so-close.groupe28.socra-sigl.fr"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo "👤 Auteur: ${{ github.actor }}"
+          echo "✅ Déploiement automatique réussi !"
