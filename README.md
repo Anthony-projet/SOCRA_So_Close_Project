@@ -8,29 +8,39 @@ So-Close est une application web moderne visant à simplifier la gestion des tâ
 
 ## Déploiement
 
-1. Se connecter au serveur :
+### 1. Se connecter au serveur
+
 ```bash
-ssh -i <chemin_vers_votre_cle_privee> sigl@so-close.groupXX.socra-sigl.fr
+ssh -i <chemin_vers_votre_cle_privee> sigl@so-close.groupe28.socra-sigl.fr
 ```
 
-2. Installer Nginx :
+### 2. Installer Nginx
+
 ```bash
 sudo apt update
 sudo apt install nginx -y
 ```
 
-3. Copier les fichiers du site :
+### 3. Copier les fichiers du site
+
 ```bash
-scp -i <chemin_vers_votre_cle_privee> -r src/public/* sigl@so-close.groupXX.socra-sigl.fr:/var/www/html/
+scp -i <chemin_vers_votre_cle_privee> -r src/public/* sigl@so-close.groupe28.socra-sigl.fr:/var/www/html/
 ```
 
-4. (Optionnel) Pour HTTPS avec Let's Encrypt :
+### 4. (Optionnel) Pour HTTPS avec Let's Encrypt
+
 ```bash
 sudo apt install certbot python3-certbot-nginx -y
-sudo certbot --nginx -d so-close.groupXX.socra-sigl.fr
+sudo certbot --nginx -d so-close.groupe28.socra-sigl.fr
 ```
 
 ## Équipe
 
-- Caron Anthony
-- Jolivalt Guillaume
+- **Caron Anthony**
+- **Jolivalt Guillaume**
+
+## Déploiement Automatique
+
+Le site est automatiquement déployé via GitHub Actions sur chaque push vers la branche `main`.
+
+Site disponible : <https://so-close.groupe28.socra-sigl.fr>
