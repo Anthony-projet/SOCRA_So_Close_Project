@@ -1,0 +1,29 @@
+# Exclure les fichiers inutiles du contexte Docker
+
+# Fichiers Git et GitHub
+.git
+.github
+.gitignore
+
+# Documentation (pas besoin dans le container)
+README.md
+*.md
+
+# Fichiers Docker eux-mêmes
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Fichiers de développement
+.vscode/
+.idea/
+*.log
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers temporaires
+*.tmp
+*.temp
+.cache/
