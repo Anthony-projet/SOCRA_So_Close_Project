@@ -29,15 +29,3 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: index.html
           target: /home/sigl
-
-      - name: Déployer vers Nginx
-        uses: appleboy/ssh-action@v0.1.4
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            sudo cp /home/sigl/index.html /var/www/html/
-            sudo chown www-data:www-data /var/www/html/index.html
-            sudo systemctl reload nginx
-            echo "✅ Déploiement terminé!"
