@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: anthony-projet/so-close
 
 jobs:
   build-and-deploy:
@@ -46,6 +46,10 @@ jobs:
             type=ref,event=branch
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
+          flavor: |
+            latest=auto
+            prefix=
+            suffix=
 
       - name: 🔧 Configuration Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -76,7 +80,7 @@ jobs:
             echo "🌍 Projet: So-Close - SOCRA SIGL 2026"
             
             # Variables
-            IMAGE_NAME="ghcr.io/${{ github.repository }}:latest"
+            IMAGE_NAME="ghcr.io/anthony-projet/so-close:latest"
             CONTAINER_BLUE="so-close-blue"
             CONTAINER_GREEN="so-close-green"
             NGINX_CONFIG="/etc/nginx/sites-available/so-close"
