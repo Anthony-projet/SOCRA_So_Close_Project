@@ -4,7 +4,8 @@ Ce projet fait partie du cours SOCRA d'EPITA SIGL 2026.
 
 ## Description
 
-So-Close est une application web moderne visant à simplifier la gestion des tâches quotidiennes.
+So-Close est une application web moderne visant à simplifier la gestion
+des tâches quotidiennes.
 
 ## Déploiement
 
@@ -24,7 +25,8 @@ sudo apt install nginx -y
 ### 3. Copier les fichiers du site
 
 ```bash
-scp -i <chemin_vers_votre_cle_privee> -r src/public/* sigl@so-close.groupe28.socra-sigl.fr:/var/www/html/
+scp -i <chemin_vers_votre_cle_privee> -r src/public/* \
+  sigl@so-close.groupe28.socra-sigl.fr:/var/www/html/
 ```
 
 ### 4. (Optionnel) Pour HTTPS avec Let's Encrypt
@@ -41,6 +43,7 @@ sudo certbot --nginx -d so-close.groupe28.socra-sigl.fr
 
 ## Déploiement Automatique
 
-Le site est automatiquement déployé via GitHub Actions sur chaque push vers la branche `main`.
+Le site est automatiquement déployé via GitHub Actions sur chaque push
+vers la branche `main`.
 
 Site disponible : <https://so-close.groupe28.socra-sigl.fr>
