@@ -34,8 +34,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: index.html
-          target: /home/sigl
+          source: "index.html"
+          target: "/home/sigl/"
       
       - name: 🔄 Déployer vers Nginx
         uses: appleboy/ssh-action@v0.1.4
@@ -43,26 +43,48 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
+          command_timeout: 30s
           script: |
+            set -e
             echo "🔄 Déploiement en cours sur so-close.groupe28.socra-sigl.fr..."
-            sudo cp /home/sigl/index.html /var/www/html/ 2>/dev/null || echo "index.html non trouvé"
-            sudo chown www-data:www-data /var/www/html/index.html
-            sudo systemctl reload nginx
-            echo "✅ Déploiement terminé avec succès !"
-            echo "🌐 Site mis à jour sur : https://so-close.groupe28.socra-sigl.fr"
+            
+            # Vérifier que le fichier a été copié
+            if [ -f /home/sigl/index.html ]; then
+              echo "✅ Fichier index.html trouvé"
+              sudo cp /home/sigl/index.html /var/www/html/
+              sudo chown www-data:www-data /var/www/html/index.html
+              sudo chmod 644 /var/www/html/index.html
+              
+              # Test et rechargement Nginx
+              sudo nginx -t && sudo systemctl reload nginx
+              
+              echo "✅ Déploiement terminé avec succès !"
+              echo "🌐 Site mis à jour sur : https://so-close.groupe28.socra-sigl.fr"
+            else
+              echo "❌ Erreur: index.html non trouvé dans /home/sigl/"
+              exit 1
+            fi
       
       - name: 🧪 Test de santé du site
         run: |
           echo "🧪 Vérification que le site répond..."
           sleep 5
-          curl -f -s -o /dev/null https://so-close.groupe28.socra-sigl.fr && echo "✅ Site accessible !" || echo "❌ Site non accessible - vérifiez manuellement"
+          if curl -f -s -o /dev/null https://so-close.groupe28.socra-sigl.fr; then
+            echo "✅ Site accessible et fonctionnel !"
+          else
+            echo "⚠️ Site non accessible - vérifiez manuellement"
+            echo "🔗 URL: https://so-close.groupe28.socra-sigl.fr"
+          fi
 
       - name: 📊 Résumé du déploiement
         run: |
+          echo ""
           echo "📊 RÉSUMÉ DU DÉPLOIEMENT"
           echo "========================="
           echo "🕐 Heure: $(date)"
           echo "🌍 Site: https://so-close.groupe28.socra-sigl.fr"
           echo "📝 Commit: ${{ github.sha }}"
           echo "👤 Auteur: ${{ github.actor }}"
+          echo "🔄 Pipeline: ${{ github.run_number }}"
           echo "✅ Déploiement automatique réussi !"
+          echo ""
