@@ -133,9 +133,17 @@ jobs:
                 exit 1
             fi
             
-            # Basculer Nginx vers le nouveau container
+            # Basculer Nginx vers le nouveau container (préserver Let's Encrypt)
             echo "🔄 Basculement du trafic..."
-            sudo tee $NGINX_CONFIG > /dev/null <<EOF
+            
+            # Vérifier si Let's Encrypt est configuré
+            if sudo test -f /etc/letsencrypt/live/so-close.groupe28.socra-sigl.fr/fullchain.pem; then
+                echo "🔒 Let's Encrypt détecté, mise à jour du proxy uniquement..."
+                # Modifier juste le proxy_pass dans la config existante
+                sudo sed -i "s|proxy_pass http://localhost:[0-9]*|proxy_pass http://localhost:$NEW_PORT|g" $NGINX_CONFIG
+            else
+                echo "📝 Let's Encrypt non trouvé, configuration HTTP de base..."
+                sudo tee $NGINX_CONFIG > /dev/null <<EOF
             server {
                 listen 80;
                 server_name so-close.groupe28.socra-sigl.fr;
@@ -146,20 +154,10 @@ jobs:
                     proxy_set_header X-Real-IP \$remote_addr;
                     proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
                     proxy_set_header X-Forwarded-Proto \$scheme;
-                    
-                    # Timeouts
-                    proxy_connect_timeout 5s;
-                    proxy_send_timeout 10s;
-                    proxy_read_timeout 10s;
-                }
-                
-                # Page de santé
-                location /health {
-                    proxy_pass http://localhost:$NEW_PORT/;
-                    access_log off;
                 }
             }
             EOF
+            fi
             
             # Recharger Nginx
             sudo nginx -t && sudo systemctl reload nginx
