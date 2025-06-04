@@ -38,19 +38,27 @@ jobs:
           target: "/home/sigl/"
       
       - name: 🔄 Déployer vers Nginx
-        uses: appleboy/ssh-action@v0.1.4
-        continue-on-error: true  # LE DÉPLOIEMENT MARCHE, ON IGNORE JUSTE L'ERREUR SSH
+        uses: appleboy/ssh-action@v0.1.7  # Version plus récente
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          timeout: 30s
+          port: 22
+          timeout: 60s
+          command_timeout: 60s
+          debug: true
+          use_insecure_cipher: false
+          script_stop: true
           script: |
+            set -e
             echo "🔄 Déploiement en cours..."
             
             # Vérifier que le fichier existe
             if [ -f /home/sigl/index.html ]; then
               echo "✅ Fichier index.html trouvé"
+              
+              # Créer une sauvegarde
+              sudo cp /var/www/html/index.html /var/www/html/index.html.backup 2>/dev/null || echo "Pas de fichier existant à sauvegarder"
               
               # Déploiement
               sudo cp /home/sigl/index.html /var/www/html/
@@ -63,17 +71,14 @@ jobs:
               
               echo "✅ Déploiement terminé avec succès !"
               echo "🌐 Site: https://so-close.groupe28.socra-sigl.fr"
+              
+              # Vérifier que le fichier est bien là
+              ls -la /var/www/html/index.html
             else
-              echo "❌ Erreur: index.html non trouvé"
+              echo "❌ Erreur: index.html non trouvé dans /home/sigl/"
               exit 1
             fi
-      
-      - name: ✅ Validation du déploiement
-        run: |
-          echo "✅ Le déploiement précédent a réussi même si l'erreur SSH est affichée"
-          echo "🔍 L'erreur SSH est un problème de fermeture de connexion, pas de déploiement"
-          echo "💡 Votre site est correctement mis à jour !"
-      
+    
       - name: 🧪 Test de santé du site
         run: |
           echo "🧪 Vérification que le site répond..."
@@ -81,7 +86,7 @@ jobs:
           if curl -f -s -o /dev/null https://so-close.groupe28.socra-sigl.fr; then
             echo "✅ Site accessible et fonctionnel !"
           else
-            echo "⚠️ Site peut être accessible manuellement"
+            echo "⚠️ Site non accessible"
             echo "🔗 Vérifiez : https://so-close.groupe28.socra-sigl.fr"
           fi
 
@@ -97,7 +102,4 @@ jobs:
           echo "👤 Auteur: ${{ github.actor }}"
           echo "🔄 Pipeline: ${{ github.run_number }}"
           echo ""
-          echo "✅ DÉPLOIEMENT RÉUSSI !"
-          echo "💡 L'erreur SSH affichée est normale et n'impacte pas le fonctionnement"
-          echo "🚀 Votre TP2 est terminé avec succès !"
-          echo ""
+          
