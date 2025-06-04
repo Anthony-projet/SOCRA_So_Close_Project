@@ -15,3 +15,8 @@ jobs:
 
       - name: Afficher l'heure du build
         run: date
+
+      - name: Vérification Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v15
+        with:
+          globs: "**/*.md"
