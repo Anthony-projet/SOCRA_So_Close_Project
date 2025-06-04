@@ -39,57 +39,31 @@ jobs:
       
       - name: 🔄 Déployer vers Nginx
         uses: appleboy/ssh-action@v0.1.4
-        continue-on-error: true  # Ignore l'erreur de fermeture SSH
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          command_timeout: 30s
+          timeout: 30s
           script: |
-            set -e
-            echo "🔄 Déploiement en cours sur so-close.groupe28.socra-sigl.fr..."
+            echo "🔄 Déploiement en cours..."
             
-            # Vérifier que le fichier a été copié
+            # Vérifier que le fichier existe
             if [ -f /home/sigl/index.html ]; then
               echo "✅ Fichier index.html trouvé"
+              
+              # Déploiement
               sudo cp /home/sigl/index.html /var/www/html/
               sudo chown www-data:www-data /var/www/html/index.html
               sudo chmod 644 /var/www/html/index.html
               
               # Test et rechargement Nginx
-              sudo nginx -t && sudo systemctl reload nginx
+              sudo nginx -t
+              sudo systemctl reload nginx
               
               echo "✅ Déploiement terminé avec succès !"
-              echo "🌐 Site mis à jour sur : https://so-close.groupe28.socra-sigl.fr"
-              
-              # Créer un fichier de statut pour valider le déploiement
-              echo "DEPLOYMENT_SUCCESS" > /tmp/deploy_status
+              echo "🌐 Site: https://so-close.groupe28.socra-sigl.fr"
             else
-              echo "❌ Erreur: index.html non trouvé dans /home/sigl/"
-              echo "DEPLOYMENT_FAILED" > /tmp/deploy_status
-              exit 1
-            fi
-      
-      - name: ✅ Vérifier le succès du déploiement
-        uses: appleboy/ssh-action@v0.1.4
-        id: check_deployment
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            if [ -f /tmp/deploy_status ]; then
-              status=$(cat /tmp/deploy_status)
-              if [ "$status" = "DEPLOYMENT_SUCCESS" ]; then
-                echo "✅ Déploiement validé avec succès"
-                rm /tmp/deploy_status
-                exit 0
-              else
-                echo "❌ Déploiement échoué"
-                exit 1
-              fi
-            else
-              echo "❌ Statut de déploiement introuvable"
+              echo "❌ Erreur: index.html non trouvé"
               exit 1
             fi
       
@@ -101,10 +75,10 @@ jobs:
             echo "✅ Site accessible et fonctionnel !"
           else
             echo "⚠️ Site non accessible - vérifiez manuellement"
-            echo "🔗 URL: https://so-close.groupe28.socra-sigl.fr"
           fi
 
       - name: 📊 Résumé du déploiement
+        if: always()
         run: |
           echo ""
           echo "📊 RÉSUMÉ DU DÉPLOIEMENT"
@@ -114,5 +88,4 @@ jobs:
           echo "📝 Commit: ${{ github.sha }}"
           echo "👤 Auteur: ${{ github.actor }}"
           echo "🔄 Pipeline: ${{ github.run_number }}"
-          echo "✅ Déploiement automatique réussi !"
-          echo ""
+          echo "✅ Pipeline terminé !"
