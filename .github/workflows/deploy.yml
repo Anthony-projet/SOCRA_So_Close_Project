@@ -45,7 +45,14 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            set -e
+            if [ ! -d /home/sigl ]; then
+              echo "Clonage du dépôt..."
+              git clone https://github.com/Anthony-projet/SOCRA_So_Close_Project.git /home/sigl/SOCRA_So_Close_Project
+            fi
             cd /home/sigl/SOCRA_So_Close_Project
+            echo "Contenu du dossier projet :"
+            ls -l
             git pull
             docker-compose pull
             docker-compose up -d --remove-orphans
