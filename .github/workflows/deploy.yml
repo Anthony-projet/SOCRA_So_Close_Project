@@ -1,4 +1,4 @@
-name: 🐳 Déploiement Docker So-Close
+name: 🐳 Déploiement Docker Compose So-Close
 
 on:
   push:
@@ -7,7 +7,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: anthony-projet/so-close
+  IMAGE_API: anthony-projet/so-close-api
+  IMAGE_FRONTEND: anthony-projet/so-close-frontend
 
 jobs:
   build-and-deploy:
@@ -17,193 +18,35 @@ jobs:
       packages: write
 
     steps:
-      - name: 📥 Récupération du code
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: 🕐 Afficher l'heure du build
-        run: date
-
-      - name: 📁 Lister les fichiers du projet
-        run: |
-          echo "📁 Structure du projet So-Close :"
-          ls -la
-          echo "🔍 Fichier principal :"
-          ls -la index.html
-
-      - name: 🔑 Connexion à GitHub Container Registry
+      - name: 🔑 Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 📋 Extraction des métadonnées Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
-          flavor: |
-            latest=auto
-            prefix=
-            suffix=
+      - name: 🐳 Build and push API image
+        run: |
+          docker build -t $REGISTRY/$IMAGE_API:latest ./web-api
+          docker push $REGISTRY/$IMAGE_API:latest
 
-      - name: 🔧 Configuration Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: 🐳 Build and push Frontend image
+        run: |
+          docker build -t $REGISTRY/$IMAGE_FRONTEND:latest ./frontend
+          docker push $REGISTRY/$IMAGE_FRONTEND:latest
 
-      - name: 🐳 Build et Push de l'image Docker
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: 🚀 Déploiement Zero-Downtime sur le serveur
+      - name: 🚀 Deploy on VM with Docker Compose
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          timeout: 120s
-          command_timeout: 120s
           script: |
-            set -e
-            
-            echo "🐳 === DÉPLOIEMENT DOCKER ZERO-DOWNTIME ==="
-            echo "📅 $(date)"
-            echo "🌍 Projet: So-Close - SOCRA SIGL 2026"
-            
-            # Variables
-            IMAGE_NAME="ghcr.io/anthony-projet/so-close:latest"
-            CONTAINER_BLUE="so-close-blue"
-            CONTAINER_GREEN="so-close-green"
-            NGINX_CONFIG="/etc/nginx/sites-available/so-close"
-            
-            # Se connecter à GitHub Container Registry
-            echo "🔑 Connexion à GitHub Container Registry..."
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            
-            # Puller la nouvelle image
-            echo "📥 Téléchargement de la nouvelle image..."
-            docker pull $IMAGE_NAME
-            
-            # Déterminer quel container est actuellement actif
-            if docker ps --format "table {{.Names}}" | grep -q $CONTAINER_BLUE; then
-                ACTIVE_CONTAINER=$CONTAINER_BLUE
-                NEW_CONTAINER=$CONTAINER_GREEN
-                NEW_PORT=8081
-                echo "🔵 Container bleu actif, déploiement vers vert"
-            else
-                ACTIVE_CONTAINER=$CONTAINER_GREEN
-                NEW_CONTAINER=$CONTAINER_BLUE
-                NEW_PORT=8080
-                echo "🟢 Container vert actif (ou aucun), déploiement vers bleu"
-            fi
-            
-            # Arrêter et supprimer l'ancien container de destination
-            echo "🗑️ Nettoyage du container de destination..."
-            docker stop $NEW_CONTAINER 2>/dev/null || true
-            docker rm $NEW_CONTAINER 2>/dev/null || true
-            
-            # Lancer le nouveau container
-            echo "🚀 Lancement du nouveau container ($NEW_CONTAINER)..."
-            docker run -d \
-              --name $NEW_CONTAINER \
-              --restart unless-stopped \
-              -p $NEW_PORT:80 \
-              $IMAGE_NAME
-            
-            # Attendre que le container soit prêt
-            echo "⏳ Attente que le nouveau container soit prêt..."
-            sleep 10
-            
-            # Test de santé du nouveau container
-            echo "🧪 Test de santé du nouveau container..."
-            if curl -f -s http://localhost:$NEW_PORT >/dev/null; then
-                echo "✅ Nouveau container opérationnel"
-            else
-                echo "❌ Échec du test de santé"
-                docker logs $NEW_CONTAINER --tail 20
-                exit 1
-            fi
-            
-            # Basculer Nginx vers le nouveau container (préserver Let's Encrypt)
-            echo "🔄 Basculement du trafic..."
-            
-            # Vérifier si Let's Encrypt est configuré
-            if sudo test -f /etc/letsencrypt/live/so-close.groupe28.socra-sigl.fr/fullchain.pem; then
-                echo "🔒 Let's Encrypt détecté, mise à jour du proxy uniquement..."
-                # Modifier juste le proxy_pass dans la config existante
-                sudo sed -i "s|proxy_pass http://localhost:[0-9]*|proxy_pass http://localhost:$NEW_PORT|g" $NGINX_CONFIG
-            else
-                echo "📝 Let's Encrypt non trouvé, configuration HTTP de base..."
-                sudo tee $NGINX_CONFIG > /dev/null <<EOF
-            server {
-                listen 80;
-                server_name so-close.groupe28.socra-sigl.fr;
-                
-                location / {
-                    proxy_pass http://localhost:$NEW_PORT;
-                    proxy_set_header Host \$host;
-                    proxy_set_header X-Real-IP \$remote_addr;
-                    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-                    proxy_set_header X-Forwarded-Proto \$scheme;
-                }
-            }
-            EOF
-            fi
-            
-            # Recharger Nginx
-            sudo nginx -t && sudo systemctl reload nginx
-            echo "✅ Nginx reconfiguré et rechargé"
-            
-            # Attendre un peu puis arrêter l'ancien container
-            sleep 5
-            if docker ps --format "table {{.Names}}" | grep -q $ACTIVE_CONTAINER; then
-                echo "🗑️ Arrêt de l'ancien container ($ACTIVE_CONTAINER)..."
-                docker stop $ACTIVE_CONTAINER 2>/dev/null || true
-                docker rm $ACTIVE_CONTAINER 2>/dev/null || true
-            fi
-            
-            # Nettoyage des images anciennes
-            echo "🧹 Nettoyage des images inutilisées..."
-            docker system prune -f --filter "until=24h"
-            
-            echo ""
-            echo "🎉 === DÉPLOIEMENT ZERO-DOWNTIME RÉUSSI ==="
-            echo "🐳 Container actif: $NEW_CONTAINER"
-            echo "🌍 Site: https://so-close.groupe28.socra-sigl.fr"
-            echo "📊 Image: $IMAGE_NAME"
-            echo "✅ Aucune interruption de service !"
-
-      - name: 🧪 Test de santé final
-        run: |
-          echo "🧪 Test final du site en production..."
-          sleep 5
-          if curl -f -s -o /dev/null https://so-close.groupe28.socra-sigl.fr; then
-            echo "✅ Site accessible et fonctionnel !"
-          else
-            echo "⚠️ Test de connectivité échoué"
-          fi
-
-      - name: 📊 Résumé du déploiement Docker
-        if: always()
-        run: |
-          echo ""
-          echo "📊 RÉSUMÉ DU DÉPLOIEMENT DOCKER"
-          echo "================================"
-          echo "🕐 Heure: $(date)"
-          echo "🌍 Site: https://so-close.groupe28.socra-sigl.fr"
-          echo "🐳 Registry: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
-          echo "📝 Commit: ${{ github.sha }}"
-          echo "👤 Auteur: ${{ github.actor }}"
-          echo "🔄 Pipeline: ${{ github.run_number }}"
-          echo "🎯 So-Close - SOCRA SIGL 2026"
-          echo "✨ Déploiement Zero-Downtime avec Docker !"
-          echo ""
+            cd /chemin/du/projet # <-- adapte ce chemin à l'endroit où est cloné ton repo sur la VM
+            git pull
+            docker-compose pull
+            docker-compose up -d --remove-orphans
+            docker system prune -f

@@ -1,0 +1,298 @@
+[
+    {
+      "id": 1,
+      "name": "Jardin Partagé des Batignolles",
+      "district": "17ème arrondissement",
+      "address": "15 Rue Cardinet, 75017 Paris",
+      "coordinates": {
+        "lat": 48.8848,
+        "lng": 2.3200
+      },
+      "description": "Un jardin communautaire au cœur des Batignolles, parfait pour cultiver légumes et aromates en ville. Ouvert aux débutants avec accompagnement.",
+      "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop",
+      "surface": "450m²",
+      "availablePlots": 8,
+      "totalPlots": 24,
+      "pricePerMonth": 35,
+      "amenities": [
+        "Arrosage automatique",
+        "Composteur",
+        "Abri à outils",
+        "Point d'eau"
+      ],
+      "communitySize": 32,
+      "openHours": "7h-20h",
+      "status": "Disponible",
+      "features": [
+        "Permaculture",
+        "Bio",
+        "Débutants bienvenus"
+      ],
+      "contact": {
+        "name": "Marie Dubois",
+        "phone": "06.12.34.56.78",
+        "email": "marie@jardin-batignolles.fr"
+      },
+      "rating": 4.8,
+      "reviews": 15
+    },
+    {
+      "id": 2,
+      "name": "Potager Urbain Montmartre",
+      "district": "18ème arrondissement",
+      "address": "42 Rue Damrémont, 75018 Paris",
+      "coordinates": {
+        "lat": 48.8922,
+        "lng": 2.3367
+      },
+      "description": "Jardin en terrasses avec vue sur Montmartre. Spécialisé dans les plantes méditerranéennes et les herbes aromatiques.",
+      "image": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=300&fit=crop",
+      "surface": "280m²",
+      "availablePlots": 3,
+      "totalPlots": 18,
+      "pricePerMonth": 42,
+      "amenities": [
+        "Serre chauffée",
+        "Composteur",
+        "Récupérateur d'eau",
+        "Salon de jardin"
+      ],
+      "communitySize": 25,
+      "openHours": "8h-19h",
+      "status": "Presque complet",
+      "features": [
+        "Vue panoramique",
+        "Plantes méditerranéennes",
+        "Ateliers cuisine"
+      ],
+      "contact": {
+        "name": "Pierre Martin",
+        "phone": "06.98.76.54.32",
+        "email": "pierre@potager-montmartre.fr"
+      },
+      "rating": 4.6,
+      "reviews": 22
+    },
+    {
+      "id": 3,
+      "name": "Jardin Solidaire République",
+      "district": "11ème arrondissement", 
+      "address": "8 Passage Saint-Pierre Amelot, 75011 Paris",
+      "coordinates": {
+        "lat": 48.8630,
+        "lng": 2.3708
+      },
+      "description": "Jardin solidaire axé sur l'insertion sociale et l'apprentissage. Programmes d'accompagnement pour tous les niveaux.",
+      "image": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop",
+      "surface": "380m²",
+      "availablePlots": 12,
+      "totalPlots": 20,
+      "pricePerMonth": 25,
+      "amenities": [
+        "Local commun",
+        "Bibliothèque jardin",
+        "Composteur",
+        "Atelier bricolage"
+      ],
+      "communitySize": 45,
+      "openHours": "9h-18h",
+      "status": "Disponible",
+      "features": [
+        "Solidaire",
+        "Formation incluse",
+        "Accès PMR"
+      ],
+      "contact": {
+        "name": "Sophie Leroy",
+        "phone": "06.45.67.89.12",
+        "email": "sophie@jardin-republique.org"
+      },
+      "rating": 4.9,
+      "reviews": 8
+    },
+    {
+      "id": 4,
+      "name": "Éco-Jardin Belleville",
+      "district": "20ème arrondissement",
+      "address": "23 Rue de Belleville, 75020 Paris",
+      "coordinates": {
+        "lat": 48.8722,
+        "lng": 2.3764
+      },
+      "description": "Jardin écologique certifié bio, spécialisé dans la permaculture et la biodiversité urbaine. Ruches et poulailler sur site.",
+      "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop",
+      "surface": "650m²",
+      "availablePlots": 5,
+      "totalPlots": 35,
+      "pricePerMonth": 38,
+      "amenities": [
+        "Ruches",
+        "Poulailler",
+        "Serre bioclimatique",
+        "Mare écologique"
+      ],
+      "communitySize": 52,
+      "openHours": "7h30-21h",
+      "status": "Disponible",
+      "features": [
+        "Certifié Bio",
+        "Biodiversité",
+        "Permaculture avancée"
+      ],
+      "contact": {
+        "name": "Julien Moreau",
+        "phone": "06.23.45.67.89",
+        "email": "julien@eco-belleville.fr"
+      },
+      "rating": 4.7,
+      "reviews": 31
+    },
+    {
+      "id": 5,
+      "name": "Jardin des Plantes Urbaines",
+      "district": "5ème arrondissement",
+      "address": "12 Rue Geoffrey-Saint-Hilaire, 75005 Paris",
+      "coordinates": {
+        "lat": 48.8437,
+        "lng": 2.3553
+      },
+      "description": "Jardin pédagogique près du Jardin des Plantes. Focus sur l'expérimentation et la recherche en agriculture urbaine.",
+      "image": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=300&fit=crop",
+      "surface": "320m²",
+      "availablePlots": 0,
+      "totalPlots": 16,
+      "pricePerMonth": 55,
+      "amenities": [
+        "Laboratoire",
+        "Bibliothèque spécialisée",
+        "Microscopes",
+        "Station météo"
+      ],
+      "communitySize": 28,
+      "openHours": "9h-17h",
+      "status": "Complet",
+      "features": [
+        "Recherche",
+        "Expérimentation",
+        "Niveau avancé"
+      ],
+      "contact": {
+        "name": "Dr. Anne Petit",
+        "phone": "06.78.90.12.34",
+        "email": "anne@jardin-recherche.fr"
+      },
+      "rating": 4.5,
+      "reviews": 12
+    },
+    {
+      "id": 6,
+      "name": "Potager Vertical Marais",
+      "district": "4ème arrondissement",
+      "address": "35 Rue des Rosiers, 75004 Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3590
+      },
+      "description": "Jardin vertical innovant au cœur du Marais. Techniques hydroponiques et aéroponiques pour maximiser l'espace.",
+      "image": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop",
+      "surface": "180m²",
+      "availablePlots": 15,
+      "totalPlots": 30,
+      "pricePerMonth": 48,
+      "amenities": [
+        "Système hydroponique",
+        "Éclairage LED",
+        "Contrôle climatique",
+        "Application mobile"
+      ],
+      "communitySize": 20,
+      "openHours": "24h/24",
+      "status": "Disponible",
+      "features": [
+        "High-tech",
+        "Vertical",
+        "Automatisé"
+      ],
+      "contact": {
+        "name": "Thomas Chen",
+        "phone": "06.34.56.78.90",
+        "email": "thomas@vertical-marais.fr"
+      },
+      "rating": 4.4,
+      "reviews": 18
+    },
+    {
+      "id": 7,
+      "name": "Jardin Participatif Nation",
+      "district": "12ème arrondissement",
+      "address": "67 Avenue de la République, 75012 Paris",
+      "coordinates": {
+        "lat": 48.8485,
+        "lng": 2.3956
+      },
+      "description": "Grand jardin participatif avec espaces dédiés aux familles. Aire de jeux et parcours pédagogique pour enfants.",
+      "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop",
+      "surface": "800m²",
+      "availablePlots": 22,
+      "totalPlots": 45,
+      "pricePerMonth": 30,
+      "amenities": [
+        "Aire de jeux",
+        "Parcours pédagogique",
+        "Barbecue commun",
+        "Parking vélos"
+      ],
+      "communitySize": 78,
+      "openHours": "8h-20h",
+      "status": "Disponible",
+      "features": [
+        "Familial",
+        "Pédagogique",
+        "Grande communauté"
+      ],
+      "contact": {
+        "name": "Isabelle Roux",
+        "phone": "06.11.22.33.44",
+        "email": "isabelle@jardin-nation.fr"
+      },
+      "rating": 4.8,
+      "reviews": 24
+    },
+    {
+      "id": 8,
+      "name": "Micro-Ferme Urbaine Bastille",
+      "district": "11ème arrondissement",
+      "address": "15 Rue de la Roquette, 75011 Paris",
+      "coordinates": {
+        "lat": 48.8553,
+        "lng": 2.3744
+      },
+      "description": "Micro-ferme urbaine professionnelle. Production intensive en circuit court avec vente directe aux habitants.",
+      "image": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=300&fit=crop",
+      "surface": "220m²",
+      "availablePlots": 6,
+      "totalPlots": 12,
+      "pricePerMonth": 65,
+      "amenities": [
+        "Serres professionnelles",
+        "Chambre froide",
+        "Point de vente",
+        "Formation pro"
+      ],
+      "communitySize": 15,
+      "openHours": "6h-22h",
+      "status": "Disponible",
+      "features": [
+        "Professionnel",
+        "Circuit court",
+        "Formation métier"
+      ],
+      "contact": {
+        "name": "Marc Durand",
+        "phone": "06.55.66.77.88",
+        "email": "marc@microferme-bastille.fr"
+      },
+      "rating": 4.6,
+      "reviews": 9
+    }
+  ]

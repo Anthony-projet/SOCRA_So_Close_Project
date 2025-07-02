@@ -1,20 +1,34 @@
 version: '3.8'
 
 services:
-  so-close-web:
-    build: .
-    container_name: so-close-local
-    ports:
-      - "8080:80"
+  api:
+    image: ghcr.io/anthony-projet/so-close-api:latest
+    build: ./web-api
+    container_name: so-close-api
+    volumes:
+      - ./data:/app/data:ro
+    expose:
+      - "3001"
     restart: unless-stopped
-    environment:
-      - ENV=development
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+
+  frontend:
+    image: ghcr.io/anthony-projet/so-close-frontend:latest
+    build: ./frontend
+    container_name: so-close-frontend
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: so-close-nginx
+    ports:
+      - "8080:80"  # ou "80:80" en prod
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - frontend
 
 networks:
   default:
