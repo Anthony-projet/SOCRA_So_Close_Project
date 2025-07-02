@@ -54,6 +54,6 @@ jobs:
             echo "Contenu du dossier projet :"
             ls -l
             git pull
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+            docker compose build api frontend
+            docker compose up -d --remove-orphans
             docker system prune -f  
