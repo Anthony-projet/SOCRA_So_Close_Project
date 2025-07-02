@@ -32,4 +32,4 @@ services:
 
 networks:
   default:
-    name: so-close-network
+    name: so-close-network 
