@@ -46,9 +46,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             set -e
-            if [ ! -d /home/sigl ]; then
+            if [ ! -d /home/sigl/SOCRA_So_Close_Project ]; then
               echo "Clonage du dépôt..."
-              git clone https://github.com/Anthony-projet/SOCRA_So_Close_Project.git /home/sigl/SOCRA_So_Close_Project
+              git clone https://github.com/Anthony-projet/SOCRA_So_Close_Project.git /home/sigl/
             fi
             cd /home/sigl/SOCRA_So_Close_Project
             echo "Contenu du dossier projet :"
